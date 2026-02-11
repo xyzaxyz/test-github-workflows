@@ -41,3 +41,16 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Create Git Tag
+        run: |
+          TAG_NAME="deploy-$(date +%Y%m%d-%H%M%S)"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: static-content
+          path: '.'
+          retention-days: 30
